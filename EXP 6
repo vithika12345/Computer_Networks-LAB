@@ -1,0 +1,72 @@
+# EXPERIMENT 6
+
+Analysis of Application Layer Packets (DNS) Using DNS Commands and Wireshark
+
+## THEORY
+The **Domain Name System (DNS)** is a hierarchical decentralized naming system for computers, services, or other resources connected to the Internet or a private network. It translates human-friendly domain names (e.g., `www.example.com`) into numerical IP addresses (e.g., `104.20.23.154`) required for identification and communication across networks.
+
+Using command-line utilities like `nslookup` along with network packet analyzers such as **Wireshark**, administrators can query DNS servers for various records (A, MX, PTR) and inspect application-layer query-response packet exchanges.
+
+## COMMAND-LINE EXECUTION & TERMINAL SESSION
+
+```cmd
+C:\Users\sit.lab2>nslookup [www.example.com](https://www.example.com)
+Server:  SIT-CDC.SIT-CDC.SYMBINGP.SOC
+Address:  10.17.28.42
+
+Non-authoritative answer:
+Name:    [www.example.com](https://www.example.com)
+Addresses:  2606:4700:10::6814:179a
+          2606:4700:10::ac42:93f3
+          104.20.23.154
+          172.66.147.243
+
+C:\Users\sit.lab2>nslookup 104.20.23.154
+Server:  SIT-CDC.SIT-CDC.SYMBINGP.SOC
+Address:  10.17.28.42
+
+*** SIT-CDC.SIT-CDC.SYMBINGP.SOC can't find 104.20.23.154: Non-existent domain
+
+C:\Users\sit.lab2>nslookup -query=MX example.com
+Server:  SIT-CDC.SIT-CDC.SYMBINGP.SOC
+Address:  10.17.28.42
+
+Non-authoritative answer:
+Name:    example.com
+Header:  MX preference = 0, mail exchanger = (root)
+
+C:\Users\sit.lab2>nslookup [www.example.com](https://www.example.com)
+Server:  SIT-CDC.SIT-CDC.SYMBINGP.SOC
+Address:  10.17.28.42
+
+Non-authoritative answer:
+Name:    [www.example.com](https://www.example.com)
+Addresses:  2606:4700:10::ac42:93f3
+          2606:4700:10::6814:179a
+          172.66.147.243
+          104.20.23.154
+
+```
+
+## OBSERVATIONS & ANALYSIS
+
+1. **Forward Lookup (A Record):**
+* Querying `www.example.com` resolved the domain name to multiple IPv4 and IPv6 addresses via the local DNS server (`10.17.28.42`).
+
+
+2. **Reverse Lookup (PTR Record):**
+* Attempting a reverse lookup on IP `104.20.23.154` returned a "Non-existent domain" error due to missing pointer records on the local nameserver configuration.
+
+
+3. **Mail Exchanger Query (MX Record):**
+* Querying `-query=MX example.com` successfully retrieved mail server exchange preferences for routing mail traffic.
+
+
+4. **Wireshark Packet Analysis:**
+* Packet capture filters (`dns`) displayed standard UDP port 53 query-response transactions showing domain query payloads, transaction IDs, and resolved answers.
+
+
+
+## CONCLUSION
+
+Application-layer DNS packets were successfully analyzed using command-line query tools (`nslookup`) and Wireshark. The mapping between domain names and IP addresses (A records, MX records, and server resolution paths) was examined and documented.
